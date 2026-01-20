@@ -1,8 +1,8 @@
 extends Node3D
 
 @export var cena_bola: PackedScene = preload("res://Bola-synced.tscn")    
-@export var cena_jogador: PackedScene = preload("res://Jogador.tscn")
-
+@export var cena_jogador_vermelho: PackedScene = preload("res://Jogador_vermelho.tscn")
+@export var cena_jogador_azul: PackedScene = preload("res://Jogador_azul.tscn")
 @onready var label_placar = $CanvasLayer/LabelPlacar
 @onready var spawn_bola = $SpawnBola
 @onready var nomeSala = $CanvasLayer/NomeSala
@@ -11,14 +11,16 @@ extends Node3D
 var bola_atual : RigidBody3D
 var resetando = false 
 
-var contador_jogadores = 0
+var numeroDeJogadores : int
 
 signal bola_resetou(pontos_time_a, pontos_time_b)
 var pontos_time_a = 0
 var pontos_time_b = 0
 var placar_text = str(pontos_time_a) + " - " + str(pontos_time_b)
 
-var jogadores :Array
+@onready var jogadores :Array
+var timeVermelho :Array
+var timeAzul :Array
 var cores = [Color.RED, Color.BLUE]
 
 func _ready():
@@ -29,6 +31,7 @@ func _ready():
 	GDSync.client_left.connect(jogador_saiu)
 	
 	GDSync.expose_signal(bola_resetou)	
+	#GDSync.expose_var(self, "jogadores")
 
 	GDSync.start_multiplayer()
 	
@@ -42,6 +45,8 @@ func _ready():
 	
 	$GolA.gol_marcado.connect(_ao_marcar_gol)
 	$GolB.gol_marcado.connect(_ao_marcar_gol)
+	
+	GDSync.lobby_set_data("numeroJogadores", 0)
 
 func connected():
 	console_print("GDSync connected!")
@@ -64,13 +69,15 @@ func lobby_creation_failed(lobby_name, error):
 
 func client_joined(_client_id):
 	esconder_menu()
-	if GDSync.is_host():
-		contador_jogadores += 1
-		console_print(str(contador_jogadores))
-	instanciar_jogador(GDSync.get_client_id())
-	await get_tree().create_timer(1.0).timeout
-	atualizar_cores_jogadores()
-
+	
+	var id = GDSync.get_client_id()
+	instanciar_jogador(id)
+	
+	numeroDeJogadores = GDSync.lobby_get_data("numeroJogadores", 0)
+	GDSync.lobby_set_data("numeroJogadores", numeroDeJogadores + 1)
+	
+	console_print("numeroDeJogadores depois: " + str(numeroDeJogadores))
+	
 func lobby_join_failed(lobby_name):
 	console_print("Failed to join lobby " + lobby_name)
 
@@ -109,42 +116,27 @@ func esconder_menu():
 func instanciar_jogador(idJogador):
 	if has_node(str(idJogador)):
 		return
-	console_print("Jogador entrou com ID " + str(idJogador))
 	
-	var jogador = GDSync.multiplayer_instantiate(cena_jogador, get_tree().current_scene, true,[], true)
-	jogador.name = str(idJogador)
-	jogador.add_to_group("jogadores")
-	GDSync.set_gdsync_owner(jogador, idJogador)	
-	if contador_jogadores % 2 == 0:
-		jogador.color = Color.BLUE
+	numeroDeJogadores = GDSync.lobby_get_data("numeroJogadores", 0)	
+	var corJogador = cena_jogador_vermelho
+	
+	if numeroDeJogadores % 2 == 0:
+		corJogador = cena_jogador_vermelho
 	else:
-		jogador.color = Color.RED
+		corJogador = cena_jogador_azul
+	
+	var jogador = GDSync.multiplayer_instantiate(corJogador, get_tree().current_scene, true,[], true)
+	jogador.name = str(idJogador)
+	
+	
+	
+	GDSync.set_gdsync_owner(jogador, idJogador)	
 	jogador.global_position = $SpawnJogador.global_position
 	
-	distribuir_times()
-
-func distribuir_times():
-	jogadores = get_tree().get_nodes_in_group("jogadores")
+	console_print("Jogador entrou com ID " + str(idJogador))
 	
-	for i in range(contador_jogadores - 1):
-		var jogador = jogadores[i]
-		
-		if i % 2 == 0:
-			jogador.add_to_group("vermelho")
-			jogador.remove_from_group("azul")
-			jogador.color = Color.RED
-		else:
-			jogador.add_to_group("azul")
-			jogador.remove_from_group("vermelho")
-			jogador.color = Color.BLUE
-		
-	atualizar_cores_jogadores()
+	return jogador
 
-func atualizar_cores_jogadores():
-	jogadores = get_tree().get_nodes_in_group("jogadores")
-	
-	for i in range(jogadores.size()):
-		jogadores[i].definirCor(jogadores[i].color)
 
 func jogador_saiu(idJogador):
 	console_print("Jogador saiu com ID " + str(idJogador))
@@ -154,8 +146,6 @@ func jogador_saiu(idJogador):
 	if jogador != null:
 		jogador.queue_free()
 	
-	atualizar_cores_jogadores()
-
 func instanciar_nova_bola():
 	atualizar_interface_cliente(pontos_time_a, pontos_time_b)
 	if not GDSync.is_host(): return

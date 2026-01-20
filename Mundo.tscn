@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://mundo.gd" id="1_nkia0"]
 [ext_resource type="Shader" path="res://Mundo.gdshader" id="1_rwb8a"]
 [ext_resource type="Texture2D" uid="uid://dkpuej4foxqy7" path="res://linhas campo.png" id="3_4enxl"]
-[ext_resource type="Texture2D" uid="uid://dg350oov011et" path="res://sunny_rose_garden_4k.exr" id="3_s2rba"]
 [ext_resource type="PackedScene" uid="uid://c2he2t41wjb76" path="res://Gol.tscn" id="4_6xf26"]
+[ext_resource type="Texture2D" uid="uid://cxie7op7u61jj" path="res://horn-koppe_spring_1k.exr" id="4_7xpf4"]
 [ext_resource type="Script" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="6_xnye3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xbvsk"]
@@ -18,22 +18,30 @@ size = Vector3(50, 0.5, 80)
 [sub_resource type="BoxShape3D" id="BoxShape3D_pfbyl"]
 size = Vector3(100, 1, 150)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_gyy3w"]
+size = Vector3(50, 20, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lkyv5"]
+size = Vector3(80, 20, 0.5)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rywh8"]
-albedo_color = Color(0.205117, 0.205117, 0.205117, 1)
+albedo_color = Color(0.107889, 0.383464, 0.178529, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_gcbvu"]
 material = SubResource("StandardMaterial3D_rywh8")
 size = Vector3(200, 1, 300)
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_1wiyw"]
-panorama = ExtResource("3_s2rba")
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_txsw4"]
+panorama = ExtResource("4_7xpf4")
 
 [sub_resource type="Sky" id="Sky_mmtq0"]
-sky_material = SubResource("PanoramaSkyMaterial_1wiyw")
+sky_material = SubResource("PanoramaSkyMaterial_txsw4")
 
 [sub_resource type="Environment" id="Environment_sputn"]
 background_mode = 2
+background_energy_multiplier = 1.5
 sky = SubResource("Sky_mmtq0")
+ambient_light_energy = 0.0
 
 [sub_resource type="FontFile" id="FontFile_hcga1"]
 cache/0/72/0/ascent = 0.0
@@ -47,16 +55,11 @@ cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_gyy3w"]
-size = Vector3(50, 20, 0.5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_lkyv5"]
-size = Vector3(80, 20, 0.5)
-
 [node name="Mundo" type="Node3D"]
 script = ExtResource("1_nkia0")
 
 [node name="Campo" type="StaticBody3D" parent="."]
+transform = Transform3D(1.2, 0, 0, 0, 1, 0, 0, 0, 1.2, 0, 0, 0)
 collision_mask = 3
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Campo"]
@@ -71,10 +74,31 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 
 size = Vector3(72, 2, 50)
 texture_albedo = ExtResource("3_4enxl")
 
+[node name="AreaFora" type="Area3D" parent="Campo"]
+transform = Transform3D(1.03, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+collision_mask = 2
+
+[node name="Fora1" type="CollisionShape3D" parent="Campo/AreaFora"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, -34.5)
+shape = SubResource("BoxShape3D_gyy3w")
+
+[node name="Fora2" type="CollisionShape3D" parent="Campo/AreaFora"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 34.5)
+shape = SubResource("BoxShape3D_gyy3w")
+
+[node name="Fora3" type="CollisionShape3D" parent="Campo/AreaFora"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 22.5, 10.087, -0.032)
+shape = SubResource("BoxShape3D_lkyv5")
+
+[node name="Fora4" type="CollisionShape3D" parent="Campo/AreaFora"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5, 10, 0)
+shape = SubResource("BoxShape3D_lkyv5")
+
 [node name="Campo2" type="StaticBody3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Campo2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.271671, 0)
+transform = Transform3D(1.625, 0, 0, 0, 1.625, 0, 0, 0, 1.625, 0, -0.692568, 0)
 mesh = SubResource("BoxMesh_gcbvu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Campo2/MeshInstance3D"]
@@ -85,10 +109,10 @@ shape = SubResource("BoxShape3D_pfbyl")
 environment = SubResource("Environment_sputn")
 
 [node name="GolA" parent="." instance=ExtResource("4_6xf26")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -40.5)
 
 [node name="GolB" parent="." instance=ExtResource("4_6xf26")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 34)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 40.5)
 nome_do_time = "Time B"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -146,30 +170,11 @@ gizmo_extents = 1.24
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.54096, 6.54945)
 gizmo_extents = 1.24
 
-[node name="AreaFora" type="Area3D" parent="."]
-collision_mask = 2
-
-[node name="Fora1" type="CollisionShape3D" parent="AreaFora"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, -35)
-shape = SubResource("BoxShape3D_gyy3w")
-
-[node name="Fora2" type="CollisionShape3D" parent="AreaFora"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 35)
-shape = SubResource("BoxShape3D_gyy3w")
-
-[node name="Fora3" type="CollisionShape3D" parent="AreaFora"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 24.5, 10.087, -0.032)
-shape = SubResource("BoxShape3D_lkyv5")
-
-[node name="Fora4" type="CollisionShape3D" parent="AreaFora"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -24.5, 10, 0)
-shape = SubResource("BoxShape3D_lkyv5")
-
 [node name="PropertySynchronizer" type="Node" parent="."]
 script = ExtResource("6_xnye3")
 refresh_rate = 1
 node_path = NodePath("..")
-properties = PackedStringArray("jogadores", "contador_jogadores", "pontos_time_a", "pontos_time_b", "cores", "resetando", "placar_text")
+properties = PackedStringArray("contador_jogadores", "pontos_time_a", "pontos_time_b", "cores", "resetando", "placar_text")
 interpolated = false
 interpolation_speed = 1.0
 extrapolation = null
@@ -177,4 +182,4 @@ extrapolated = false
 max_extrapolation_time = 0.2
 
 [connection signal="bola_resetou" from="." to="." method="atualizar_interface_cliente"]
-[connection signal="body_entered" from="AreaFora" to="." method="_on_area_fora_body_entered"]
+[connection signal="body_entered" from="Campo/AreaFora" to="." method="_on_area_fora_body_entered"]

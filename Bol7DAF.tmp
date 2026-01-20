@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://wyn1eadlelg2"]
+
+[ext_resource type="Script" path="res://bola.gd" id="1_6id2u"]
+[ext_resource type="PackedScene" uid="uid://dxgbdg7xdjmfe" path="res://soccer_ball__football/scene.gltf" id="2_lpusp"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_hafes"]
+friction = 0.1
+bounce = 0.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hsflh"]
+radius = 0.4
+
+[node name="Bola" type="RigidBody3D" groups=["bolas"]]
+collision_layer = 2
+physics_material_override = SubResource("PhysicsMaterial_hafes")
+linear_damp = 0.8
+angular_damp = 0.8
+script = ExtResource("1_6id2u")
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("2_lpusp")]
+transform = Transform3D(3.655, 0, 0, 0, 3.655, 0, 0, 0, 3.655, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_hsflh")

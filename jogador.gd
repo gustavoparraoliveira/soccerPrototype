@@ -8,6 +8,7 @@ extends CharacterBody3D
 @export var SPEED = 10.0
 @export var ACELERACAO = 10.0
 @export var ATRITO = 8.0
+@export var FORCA_PULO = 5.5
 
 @onready var giro_camera = $GiroCamera
 @onready var area_chute = $GiroCamera/AreaChute
@@ -18,7 +19,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var cooldown_drible = 0.0
 
 @onready var mesh = $MeshInstance3D 
-@export var color :Color
+@export var color = Color.GREEN
 
 func _ready():
 	add_to_group("jogadores")
@@ -28,7 +29,6 @@ func _ready():
 	await get_tree().process_frame
 	
 	if GDSync.is_gdsync_owner(self):
-		
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		minha_camera.make_current()
 	else:
@@ -40,7 +40,7 @@ func definirCor(assigned_color):
 	var material = StandardMaterial3D.new()
 	material.albedo_color = color
 	mesh.set_surface_override_material(0, material)
-	
+
 func _unhandled_input(event):
 	if not GDSync.is_gdsync_owner(self):
 		return
@@ -57,22 +57,28 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
+	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		velocity.y = FORCA_PULO
+
 	var input_dir = Vector2.ZERO
-	if Input.is_key_pressed(KEY_A): input_dir.x -= 1
-	if Input.is_key_pressed(KEY_D): input_dir.x += 1
-	if Input.is_key_pressed(KEY_W): input_dir.y -= 1
-	if Input.is_key_pressed(KEY_S): input_dir.y += 1
+	
+	if is_on_floor():
+		if Input.is_key_pressed(KEY_A): input_dir.x -= 1
+		if Input.is_key_pressed(KEY_D): input_dir.x += 1
+		if Input.is_key_pressed(KEY_W): input_dir.y -= 1
+		if Input.is_key_pressed(KEY_S): input_dir.y += 1
 	
 	var direcao = (spring_arm.global_transform.basis.z * input_dir.y + spring_arm.global_transform.basis.x * input_dir.x)
 	direcao.y = 0
 	direcao = direcao.normalized()
 
-	if direcao != Vector3.ZERO:
-		velocity.x = lerp(velocity.x, direcao.x * SPEED, ACELERACAO * delta)
-		velocity.z = lerp(velocity.z, direcao.z * SPEED, ACELERACAO * delta)
-	else:
-		velocity.x = lerp(velocity.x, 0.0, ATRITO * delta)
-		velocity.z = lerp(velocity.z, 0.0, ATRITO * delta)
+	if is_on_floor():
+		if direcao != Vector3.ZERO:
+			velocity.x = lerp(velocity.x, direcao.x * SPEED, ACELERACAO * delta)
+			velocity.z = lerp(velocity.z, direcao.z * SPEED, ACELERACAO * delta)
+		else:
+			velocity.x = lerp(velocity.x, 0.0, ATRITO * delta)
+			velocity.z = lerp(velocity.z, 0.0, ATRITO * delta)
 
 	move_and_slide()
 	processar_conducao(delta)
@@ -104,11 +110,11 @@ func _input(event):
 
 func tentar_chutar():
 	var multiplicador_velocidade = 0.8 + (velocity.length() / SPEED)
-	preparar_chute_rpc(forca_chute * multiplicador_velocidade, 0.2)
+	preparar_chute_rpc(forca_chute * multiplicador_velocidade, 0.1)
 
 func tentar_chute_alto():
 	var multiplicador_velocidade = 0.8 + (velocity.length() / SPEED)
-	preparar_chute_rpc(forca_chute_alto * multiplicador_velocidade, 0.7)
+	preparar_chute_rpc(forca_chute_alto * multiplicador_velocidade, 0.6)
 
 func preparar_chute_rpc(forca_base, inclinacao_y):
 	var corpos_no_chute = area_chute.get_overlapping_bodies()
