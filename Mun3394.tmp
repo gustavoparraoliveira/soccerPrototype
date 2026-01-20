@@ -1,0 +1,177 @@
+[gd_scene load_steps=19 format=3 uid="uid://itn81is0owfp"]
+
+[ext_resource type="Script" path="res://mundo.gd" id="1_nkia0"]
+[ext_resource type="Shader" path="res://Mundo.gdshader" id="1_rwb8a"]
+[ext_resource type="Texture2D" uid="uid://dkpuej4foxqy7" path="res://linhas campo.png" id="3_4enxl"]
+[ext_resource type="Texture2D" uid="uid://dg350oov011et" path="res://sunny_rose_garden_4k.exr" id="3_s2rba"]
+[ext_resource type="PackedScene" uid="uid://c2he2t41wjb76" path="res://Gol.tscn" id="4_6xf26"]
+[ext_resource type="Script" path="res://addons/GD-Sync/Scripts/Types/NodeInstantiator.gd" id="6_nodlg"]
+[ext_resource type="PackedScene" uid="uid://wyn1eadlelg2" path="res://Bola.tscn" id="7_6aawl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xbvsk"]
+render_priority = 0
+shader = ExtResource("1_rwb8a")
+
+[sub_resource type="BoxMesh" id="BoxMesh_5mhe3"]
+material = SubResource("ShaderMaterial_xbvsk")
+size = Vector3(50, 0.5, 80)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pfbyl"]
+size = Vector3(100, 1, 150)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rywh8"]
+albedo_color = Color(0.205117, 0.205117, 0.205117, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gcbvu"]
+material = SubResource("StandardMaterial3D_rywh8")
+size = Vector3(200, 1, 300)
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_1wiyw"]
+panorama = ExtResource("3_s2rba")
+
+[sub_resource type="Sky" id="Sky_mmtq0"]
+sky_material = SubResource("PanoramaSkyMaterial_1wiyw")
+
+[sub_resource type="Environment" id="Environment_sputn"]
+background_mode = 2
+sky = SubResource("Sky_mmtq0")
+
+[sub_resource type="FontFile" id="FontFile_hcga1"]
+cache/0/72/0/ascent = 0.0
+cache/0/72/0/descent = 0.0
+cache/0/72/0/underline_position = 0.0
+cache/0/72/0/underline_thickness = 0.0
+cache/0/72/0/scale = 1.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gyy3w"]
+size = Vector3(50, 20, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lkyv5"]
+size = Vector3(80, 20, 0.5)
+
+[node name="Mundo" type="Node3D"]
+script = ExtResource("1_nkia0")
+
+[node name="Campo" type="StaticBody3D" parent="."]
+collision_mask = 3
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Campo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00751877, 0.044241, -0.0299339)
+mesh = SubResource("BoxMesh_5mhe3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Campo"]
+shape = SubResource("BoxShape3D_pfbyl")
+
+[node name="Decal" type="Decal" parent="Campo"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+size = Vector3(72, 2, 50)
+texture_albedo = ExtResource("3_4enxl")
+
+[node name="Campo2" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Campo2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.271671, 0)
+mesh = SubResource("BoxMesh_gcbvu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Campo2/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00542259, 0)
+shape = SubResource("BoxShape3D_pfbyl")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_sputn")
+
+[node name="GolA" parent="." instance=ExtResource("4_6xf26")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -34)
+
+[node name="GolB" parent="." instance=ExtResource("4_6xf26")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 34)
+nome_do_time = "Time B"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="LabelPlacar" type="Label" parent="CanvasLayer"]
+offset_left = 31.0
+offset_top = 24.0
+offset_right = 257.0
+offset_bottom = 141.0
+theme_override_fonts/font = SubResource("FontFile_hcga1")
+theme_override_font_sizes/font_size = 72
+text = "0 - 0"
+
+[node name="ButtonHost" type="Button" parent="CanvasLayer"]
+offset_left = 340.0
+offset_top = 331.0
+offset_right = 570.0
+offset_bottom = 462.0
+theme_override_font_sizes/font_size = 30
+text = "Criar Partida"
+
+[node name="ButtonJoin" type="Button" parent="CanvasLayer"]
+offset_left = 585.0
+offset_top = 333.0
+offset_right = 821.0
+offset_bottom = 462.0
+theme_override_font_sizes/font_size = 30
+text = "Entrar Partida"
+
+[node name="NomeSala" type="LineEdit" parent="CanvasLayer"]
+offset_left = 340.0
+offset_top = 236.0
+offset_right = 814.0
+offset_bottom = 312.0
+
+[node name="ConsoleVisual" type="RichTextLabel" parent="CanvasLayer"]
+layout_direction = 2
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -380.0
+offset_top = 10.0
+offset_right = -7.0
+offset_bottom = 98.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+bbcode_enabled = true
+scroll_following = true
+
+[node name="SpawnBola" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.54096, 0)
+gizmo_extents = 1.24
+
+[node name="SpawnJogador" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.54096, 6.54945)
+gizmo_extents = 1.24
+
+[node name="AreaFora" type="Area3D" parent="."]
+collision_mask = 2
+
+[node name="Fora1" type="CollisionShape3D" parent="AreaFora"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, -35)
+shape = SubResource("BoxShape3D_gyy3w")
+
+[node name="Fora2" type="CollisionShape3D" parent="AreaFora"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 35)
+shape = SubResource("BoxShape3D_gyy3w")
+
+[node name="Fora3" type="CollisionShape3D" parent="AreaFora"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 24.5, 10.087, -0.032)
+shape = SubResource("BoxShape3D_lkyv5")
+
+[node name="Fora4" type="CollisionShape3D" parent="AreaFora"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -24.5, 10, 0)
+shape = SubResource("BoxShape3D_lkyv5")
+
+[node name="BolaInstantiator" type="Node" parent="."]
+script = ExtResource("6_nodlg")
+target_location = NodePath("")
+scene = ExtResource("7_6aawl")
+replicate_on_join = true
+sync_starting_changes = true
+excluded_properties = PackedStringArray()
+
+[connection signal="body_entered" from="AreaFora" to="." method="_on_area_fora_body_entered"]

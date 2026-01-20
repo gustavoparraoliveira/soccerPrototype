@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://ds5s0hurdsfsl"]
+
+[ext_resource type="Script" path="res://jogador.gd" id="1_78hs2"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_iluei"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a65ta"]
+
+[node name="Jogador" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+script = ExtResource("1_78hs2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+mesh = SubResource("CapsuleMesh_iluei")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_a65ta")
+
+[node name="GiroCamera" type="Node3D" parent="CharacterBody3D"]
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CharacterBody3D/GiroCamera"]
+spring_length = 8.58
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/GiroCamera/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 0.976315, 0.216354, 0, -0.216354, 0.976315, 0, 1.32658, 16.3666)
+
+[node name="AreaChute" type="Area3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.38419e-07, -1.52328)

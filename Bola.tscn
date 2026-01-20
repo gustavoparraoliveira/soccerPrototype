@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=3 uid="uid://wyn1eadlelg2"]
+
+[ext_resource type="Script" path="res://bola.gd" id="1_6id2u"]
+[ext_resource type="PackedScene" uid="uid://dxgbdg7xdjmfe" path="res://soccer_ball__football/scene.gltf" id="2_lpusp"]
+[ext_resource type="Script" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="3_nrayj"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_hafes"]
+friction = 0.1
+bounce = 0.9
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hsflh"]
+radius = 0.4
+
+[node name="Bola" type="RigidBody3D" groups=["bolas"]]
+collision_layer = 2
+physics_material_override = SubResource("PhysicsMaterial_hafes")
+linear_damp = 0.5
+angular_damp = 1.0
+script = ExtResource("1_6id2u")
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("2_lpusp")]
+transform = Transform3D(3.655, 0, 0, 0, 3.655, 0, 0, 0, 3.655, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_hsflh")
+
+[node name="PropertySynchronizer" type="Node" parent="."]
+script = ExtResource("3_nrayj")
+node_path = NodePath("..")
+properties = PackedStringArray("position", "rotation", "linear_velocity", "angular_velocity")
+interpolated = true
+interpolation_speed = 30.0
+extrapolated = false
+max_extrapolation_time = 0.2
