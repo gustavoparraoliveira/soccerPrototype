@@ -10,7 +10,7 @@ height = 4.0
 [sub_resource type="CylinderMesh" id="CylinderMesh_uuidx"]
 top_radius = 0.1
 bottom_radius = 0.1
-height = 9.0
+height = 9.18
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i0juk"]
 size = Vector3(9.02966, 4.07382, 0.036)
@@ -20,7 +20,7 @@ height = 4.0
 radius = 0.1
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_67ohp"]
-height = 9.0
+height = 9.18
 radius = 0.1
 
 [node name="Gol" type="StaticBody3D"]
@@ -47,7 +47,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000476837, 0.0120668, -0.0
 collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/AreaGol"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00852823, 2.0411, -0.322651)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00852823, 2.0411, -0.456725)
 shape = SubResource("BoxShape3D_i0juk")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
@@ -55,7 +55,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 2, 0)
 shape = SubResource("CylinderShape3D_5beb4")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 4, 0)
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1.51829, 0, 4, -0.0264902)
 shape = SubResource("CylinderShape3D_67ohp")
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D"]

@@ -109,6 +109,9 @@ const _CORRECTION_LINEAR_VELOCITY_THRESHOLD : float = 0.1
 const _CORRECTION_ANGULAR_VELOCITY_THRESHOLD : float = 0.05
 const _CORRECTION_POSITION_THRESHOLD : float = 0.01
 
+@export var ultimo_jogador_toque = null
+@export var ultimo_time_toque = ""
+
 func _ready() -> void:
 	
 	add_to_group("bolas")
@@ -151,7 +154,7 @@ func _physics_process(delta: float) -> void:
 				_force_sync = false
 	
 	if intensidade_efeito != 0:
-		if linear_velocity.length() < 2.0:
+		if linear_velocity.length() < 3.0:
 			intensidade_efeito = 0
 			return
 
@@ -176,8 +179,17 @@ func _physics_process(delta: float) -> void:
 func aplicar_efeito(valor: float):
 	intensidade_efeito = valor
 
-func _on_body_entered(_body):
+func _on_body_entered(body):
+	if body.is_in_group("vermelho"):
+		ultimo_time_toque = "vermelho"
+	elif body.is_in_group("azul"):
+		ultimo_time_toque = "azul"
+		
 	intensidade_efeito = 0.0
+
+func registrar_toque(jogador, time):
+	ultimo_jogador_toque = jogador
+	ultimo_time_toque = time
 
 func _may_synchronize(delta : float) -> bool:
 	_current_cooldown -= delta

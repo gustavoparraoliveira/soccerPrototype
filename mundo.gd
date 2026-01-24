@@ -128,7 +128,8 @@ func instanciar_jogador(idJogador):
 	var jogador = GDSync.multiplayer_instantiate(corJogador, get_tree().current_scene, true,[], true)
 	jogador.name = str(idJogador)
 	
-	
+	if corJogador == cena_jogador_vermelho: jogador.add_to_group("vermelho")
+	else: jogador.add_to_group("azul")
 	
 	GDSync.set_gdsync_owner(jogador, idJogador)	
 	jogador.global_position = $SpawnJogador.global_position
@@ -166,11 +167,12 @@ func _ao_marcar_gol(time):
 		pontos_time_b += 1
 	console_print("Gol!")
 	
+	atualizar_interface_cliente(pontos_time_a, pontos_time_b)
+	
 	if GDSync.is_host(): 
+		await get_tree().create_timer(1.0).timeout
 		resetar_partida_multiplayer()
 		GDSync.emit_signal_remote(bola_resetou)
-	
-	atualizar_interface_cliente(pontos_time_a, pontos_time_b)
 
 func atualizar_interface_cliente(pa, pb):
 	pontos_time_a = pa
@@ -190,6 +192,7 @@ func _on_area_fora_body_entered(body: Node3D) -> void:
 		console_print("Fora!")
 	
 	if GDSync.is_host():
+		await get_tree().create_timer(1.0).timeout
 		resetar_partida_multiplayer()
 	
 	await get_tree().create_timer(1.0).timeout
@@ -197,7 +200,6 @@ func _on_area_fora_body_entered(body: Node3D) -> void:
 	atualizar_interface_cliente(pontos_time_a, pontos_time_b)
 
 func resetar_partida_multiplayer():
-	await get_tree().create_timer(1.0).timeout
 	GDSync.multiplayer_queue_free(bola_atual)
 	instanciar_nova_bola()
 	resetando = false
@@ -214,8 +216,19 @@ func _input(event):
 			resetar_placar_total()
 		atualizar_interface_cliente(pontos_time_a, pontos_time_b)
 	
+	if event is InputEventKey and event.pressed and event.keycode == KEY_P:
+		if GDSync.is_host():
+			posicionar_penalti()
+		atualizar_interface_cliente(pontos_time_a, pontos_time_b)
+	
 	if event.is_action_pressed("ui_cancel") or (event is InputEventKey and event.keycode == KEY_ESCAPE):
 		get_tree().quit()
+
+func posicionar_penalti():
+	GDSync.multiplayer_queue_free(bola_atual)
+	bola_atual = GDSync.multiplayer_instantiate(cena_bola, get_tree().current_scene, true,[], true)
+	bola_atual.global_position = $SpawnPenalti.global_position
+	resetando = false
 
 func resetar_placar_total():
 	resetando = true

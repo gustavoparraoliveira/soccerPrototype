@@ -1,6 +1,4 @@
-[gd_resource type="Theme" load_steps=31 format=3 uid="uid://5whm1igkt23h"]
-
-[ext_resource type="FontFile" uid="uid://bnjmhin4fqi2u" path="res://addons/GD-Sync/UI/Fonts/Outfit-Regular.ttf" id="1_15q4e"]
+[gd_resource type="Theme" load_steps=30 format=3 uid="uid://5whm1igkt23h"]
 
 [sub_resource type="Gradient" id="Gradient_g3h2g"]
 offsets = PackedFloat32Array(0, 0.995791)
@@ -166,7 +164,6 @@ content_margin_bottom = 5.0
 texture = SubResource("GradientTexture2D_jlle7")
 
 [resource]
-default_font = ExtResource("1_15q4e")
 default_font_size = 16
 Button/colors/font_color = Color(1, 1, 1, 1)
 Button/colors/font_focus_color = Color(1, 1, 1, 1)
