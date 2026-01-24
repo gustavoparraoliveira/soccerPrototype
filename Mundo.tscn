@@ -1,0 +1,186 @@
+[gd_scene load_steps=18 format=3 uid="uid://itn81is0owfp"]
+
+[ext_resource type="Script" path="res://mundo.gd" id="1_nkia0"]
+[ext_resource type="Shader" path="res://Mundo.gdshader" id="1_rwb8a"]
+[ext_resource type="Texture2D" uid="uid://dkpuej4foxqy7" path="res://linhas campo.png" id="3_4enxl"]
+[ext_resource type="PackedScene" uid="uid://c2he2t41wjb76" path="res://Gol.tscn" id="4_6xf26"]
+[ext_resource type="Texture2D" uid="uid://cxie7op7u61jj" path="res://horn-koppe_spring_1k.exr" id="4_7xpf4"]
+[ext_resource type="Script" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="6_xnye3"]
+[ext_resource type="FontFile" uid="uid://c5js8h10amtav" path="res://ARIALBD.TTF" id="7_wqb60"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xbvsk"]
+render_priority = 0
+shader = ExtResource("1_rwb8a")
+
+[sub_resource type="BoxMesh" id="BoxMesh_5mhe3"]
+material = SubResource("ShaderMaterial_xbvsk")
+size = Vector3(64, 0.5, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pfbyl"]
+size = Vector3(100, 1, 150)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gyy3w"]
+size = Vector3(50, 40, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lkyv5"]
+size = Vector3(80, 40, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rywh8"]
+albedo_color = Color(0.107889, 0.383464, 0.178529, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gcbvu"]
+material = SubResource("StandardMaterial3D_rywh8")
+size = Vector3(200, 1, 300)
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_txsw4"]
+panorama = ExtResource("4_7xpf4")
+energy_multiplier = 2.0
+
+[sub_resource type="Sky" id="Sky_mmtq0"]
+sky_material = SubResource("PanoramaSkyMaterial_txsw4")
+
+[sub_resource type="Environment" id="Environment_sputn"]
+background_mode = 2
+background_energy_multiplier = 0.8
+sky = SubResource("Sky_mmtq0")
+ambient_light_energy = 0.0
+
+[node name="Mundo" type="Node3D"]
+script = ExtResource("1_nkia0")
+
+[node name="Campo" type="StaticBody3D" parent="."]
+transform = Transform3D(1.2, 0, 0, 0, 1, 0, 0, 0, 1.2, 0, 0, 0)
+collision_mask = 3
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Campo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00751877, 0.044241, -0.0299339)
+mesh = SubResource("BoxMesh_5mhe3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Campo"]
+shape = SubResource("BoxShape3D_pfbyl")
+
+[node name="Decal" type="Decal" parent="Campo"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+size = Vector3(100, 2, 64)
+texture_albedo = ExtResource("3_4enxl")
+emission_energy = 0.0
+upper_fade = 1.47737
+lower_fade = 0.144891
+
+[node name="AreaFora" type="Area3D" parent="Campo"]
+transform = Transform3D(1.03, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+collision_mask = 2
+
+[node name="Fora1" type="CollisionShape3D" parent="Campo/AreaFora"]
+transform = Transform3D(1.14421, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, -47.8)
+shape = SubResource("BoxShape3D_gyy3w")
+
+[node name="Fora2" type="CollisionShape3D" parent="Campo/AreaFora"]
+transform = Transform3D(1.28596, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 47.8)
+shape = SubResource("BoxShape3D_gyy3w")
+
+[node name="Fora3" type="CollisionShape3D" parent="Campo/AreaFora"]
+transform = Transform3D(-5.2589e-08, 0, 1, 0, 1, 0, -1.2031, 0, -4.37114e-08, 29.2, 20, -0.032)
+shape = SubResource("BoxShape3D_lkyv5")
+
+[node name="Fora4" type="CollisionShape3D" parent="Campo/AreaFora"]
+transform = Transform3D(-6.64191e-08, 0, 1, 0, 1, 0, -1.51949, 0, -4.37114e-08, -29.2, 20, 0)
+shape = SubResource("BoxShape3D_lkyv5")
+
+[node name="Campo2" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Campo2"]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, -0.692568, 0)
+mesh = SubResource("BoxMesh_gcbvu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Campo2/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00542259, 0)
+shape = SubResource("BoxShape3D_pfbyl")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_sputn")
+
+[node name="GolA" parent="." instance=ExtResource("4_6xf26")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -56)
+
+[node name="GolB" parent="." instance=ExtResource("4_6xf26")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 56)
+nome_do_time = "Time B"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="LabelPlacar" type="Label" parent="CanvasLayer"]
+offset_left = 31.0
+offset_top = 24.0
+offset_right = 257.0
+offset_bottom = 141.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 10
+theme_override_fonts/font = ExtResource("7_wqb60")
+theme_override_font_sizes/font_size = 72
+text = "0 - 0"
+
+[node name="ButtonHost" type="Button" parent="CanvasLayer"]
+offset_left = 340.0
+offset_top = 331.0
+offset_right = 570.0
+offset_bottom = 462.0
+theme_override_font_sizes/font_size = 30
+text = "Criar Partida"
+
+[node name="ButtonJoin" type="Button" parent="CanvasLayer"]
+offset_left = 585.0
+offset_top = 333.0
+offset_right = 821.0
+offset_bottom = 462.0
+theme_override_font_sizes/font_size = 30
+text = "Entrar Partida"
+
+[node name="NomeSala" type="LineEdit" parent="CanvasLayer"]
+offset_left = 340.0
+offset_top = 236.0
+offset_right = 814.0
+offset_bottom = 312.0
+
+[node name="ConsoleVisual" type="RichTextLabel" parent="CanvasLayer"]
+layout_direction = 2
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -380.0
+offset_top = 10.0
+offset_right = -7.0
+offset_bottom = 98.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+bbcode_enabled = true
+scroll_following = true
+
+[node name="SpawnBola" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.31062, 0)
+gizmo_extents = 1.24
+
+[node name="SpawnPenalti" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.745356, -21.83)
+gizmo_extents = 1.24
+
+[node name="SpawnJogador" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.54096, 6.54945)
+gizmo_extents = 1.24
+
+[node name="PropertySynchronizer" type="Node" parent="."]
+script = ExtResource("6_xnye3")
+refresh_rate = 1
+node_path = NodePath("..")
+properties = PackedStringArray("pontos_time_a", "pontos_time_b", "resetando", "placar_text")
+interpolated = false
+interpolation_speed = 1.0
+extrapolation = null
+extrapolated = false
+max_extrapolation_time = 0.2
+
+[connection signal="bola_resetou" from="." to="." method="atualizar_interface_cliente"]
+[connection signal="body_entered" from="Campo/AreaFora" to="." method="_on_area_fora_body_entered"]
