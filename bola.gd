@@ -1,54 +1,64 @@
 extends RigidBody3D
 
-var intensidade_efeito = 0.0
-@export var raio_bola = 0.22 
-@export var coeficiente_magnus = 800
-@export var ultimo_jogador_toque = null
-@export var ultimo_time_toque = ""
+var effect_intensity = 0.0
+@export var ball_radius = 0.22 
+@export var magnus_coefficient = 1.2
+@export var last_player_touch = null
+@export var last_team_touch = ""
 
-func aplicar_efeito(valor: float):
-	intensidade_efeito = valor
+func _ready():
+	contact_monitor = true
+	max_contacts_reported = 5
+	body_entered.connect(_on_body_entered)
+
+func apply_effect(value: float):
+	if multiplayer.is_server():
+		effect_intensity = value
+
+func apply_impulse_synced(impulse: Vector3):
+	if multiplayer.is_server():
+		apply_central_impulse(impulse)
 
 func _physics_process(delta):
-	if not GDSync.is_host():
-		return
+	if not multiplayer.is_server(): return
 		
-	if abs(intensidade_efeito) > 0.1:
-		var speed = linear_velocity.length()
+	var speed = linear_velocity.length()
+	
+	if abs(effect_intensity) > 0.1 and speed > 3.0:
+		var move_dir = linear_velocity.normalized()
+		var curve_dir = move_dir.cross(Vector3.UP) 
 		
-		if speed < 10.0:
-			intensidade_efeito = 0.0
-			return
+		var final_force = curve_dir * (effect_intensity * magnus_coefficient * speed)
+		
+		apply_central_force(final_force)
+		
+		effect_intensity = move_toward(effect_intensity, 0.0, delta * 0.5)
 
-		var direcao_movimento = linear_velocity.normalized()
+	if speed > 0.2:
+		var roll_axis = linear_velocity.normalized().cross(Vector3.UP)
+		var roll_speed = clamp(speed / ball_radius, 0, 50)
+		var target_rotation = -roll_axis * roll_speed
 		
-		# Magnus proporcional ao quadrado da velocidade para compensar chutes fortes
-		var forca_magnus = direcao_movimento.cross(Vector3.UP) * intensidade_efeito * coeficiente_magnus
-		
-		# Aumentei o multiplicador para 80.0 e usei speed * speed
-		apply_central_force(forca_magnus * speed * 80.0)
-		
-		intensidade_efeito = lerp(intensidade_efeito, 0.0, delta * 0.2)
+		target_rotation.y = effect_intensity * 15.0
+		angular_velocity = angular_velocity.lerp(target_rotation, delta * 2.0)
 
-	if linear_velocity.length() > 0.2:
-		var eixo_rolagem = linear_velocity.normalized().cross(Vector3.UP)
-		var velocidade_rolagem = linear_velocity.length() / raio_bola
-		
-		# Inverti o sinal do efeito visual para condizer com a curva física
-		var efeito_visual = Vector3.UP * (intensidade_efeito * -5.0)
-		var rotacao_final = (-eixo_rolagem * velocidade_rolagem) + efeito_visual
-		
-		angular_velocity = lerp(angular_velocity, rotacao_final, delta * 5.0)
-
+func is_on_floor_custom() -> bool:
+	return abs(linear_velocity.y) < 0.1
 
 func _on_body_entered(body):
-	if body.is_in_group("vermelho"):
-		ultimo_time_toque = "vermelho"
-	elif body.is_in_group("azul"):
-		ultimo_time_toque = "azul"
+	if not multiplayer.is_server(): return
+	
+	if body.is_in_group("red"):
+		last_team_touch = "red"
+	elif body.is_in_group("blue"):
+		last_team_touch = "blue"
 		
-	intensidade_efeito *= 0.2
+	if not body.is_in_group("players"):
+		effect_intensity = 0.0
+	else:
+		effect_intensity *= 0.1
 
-func registrar_toque(jogador, time):
-	ultimo_jogador_toque = jogador
-	ultimo_time_toque = time
+func register_last_touch(player, team):
+	if multiplayer.is_server():
+		last_player_touch = player
+		last_team_touch = team
