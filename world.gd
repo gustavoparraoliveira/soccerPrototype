@@ -36,6 +36,7 @@ func create_server():
 		return
 		
 	multiplayer.multiplayer_peer = peer
+	
 	console_print("Servidor Dedicado iniciado na porta 4242", "green")
 	hide_menu()
 	
@@ -52,6 +53,7 @@ func join_server():
 		return
 		
 	multiplayer.multiplayer_peer = peer
+	
 	hide_menu()
 
 func _on_peer_connected(id):
@@ -65,6 +67,8 @@ func _on_peer_disconnected(id):
 	if p: p.queue_free()
 
 func spawn_player(id):
+	if has_node(str(id)): return
+	
 	var player_count = get_tree().get_nodes_in_group("players").size()
 	var scene = player_red_scene if player_count % 2 == 0 else player_blue_scene
 	
@@ -72,25 +76,26 @@ func spawn_player(id):
 	player.name = str(id)
 	player.set_multiplayer_authority(id)
 	player.add_to_group("players")
-	
-	player.global_position = $SpawnJogador.global_position
 	add_child(player, true)
+	
+	if player_count % 2 == 0:
+		player.team = "red" 
+		player.add_to_group("red")
+		player.global_position = $SpawnRed.global_position
+	else: 
+		player.team = "blue" 
+		player.add_to_group("blue")
+		player.global_position = $SpawnBlue.global_position
 
 func spawn_ball():
-	if not multiplayer.is_server(): return
-	
-	if is_instance_valid(current_ball):
-		current_ball.freeze = true
-		current_ball.linear_velocity = Vector3.ZERO
-		current_ball.angular_velocity = Vector3.ZERO
-		current_ball.global_position = ball_spawn.global_position
-		current_ball.quaternion = Quaternion.IDENTITY
-		current_ball.freeze = false
-	else:
+	if not is_instance_valid(current_ball):
 		current_ball = ball_scene.instantiate()
 		current_ball.name = "Ball"
+		current_ball.add_to_group("ball")
 		add_child(current_ball, true)
-		current_ball.global_position = ball_spawn.global_position
+		current_ball.set_multiplayer_authority(1)
+	
+	current_ball.reset_to_spawn()
 
 func _on_goal_scored(team):
 	if not multiplayer.is_server() or is_resetting: return
@@ -100,7 +105,16 @@ func _on_goal_scored(team):
 	else: score_b += 1
 	
 	update_score_ui.rpc(score_a, score_b)
-	reset_match.call_deferred()
+	
+	await get_tree().create_timer(1.5).timeout
+	if is_instance_valid(current_ball):
+		current_ball.reset_to_spawn()
+	is_resetting = false
+
+func reset_after_goal():
+	await get_tree().create_timer(1.5).timeout
+	spawn_ball()
+	is_resetting = false
 
 @rpc("authority", "call_local", "reliable")
 func update_score_ui(sa, sb):
@@ -112,10 +126,50 @@ func update_score_ui(sa, sb):
 func _on_ball_out(body):
 	if not multiplayer.is_server() or is_resetting: return
 	
-	if body.name == "Ball":
-		notify_ball_out.rpc()
-		await get_tree().create_timer(1).timeout
-		spawn_ball()
+	if body.is_in_group("ball"):
+		notify_ball_out_internal()
+	
+	var pos = body.global_position
+	
+	if abs(pos.z) > 55.0: # Linha de fundo
+		if (pos.z > 0 and body.last_team_touch == "red"):
+			setup_set_piece("corner_red", pos)
+		elif (pos.z < 0 and body.last_team_touch == "blue"):
+			setup_set_piece("corner_blue", pos)
+		elif (pos.z < 0 and body.last_team_touch == "red"):
+			setup_set_piece("goal_kick_blue", pos)
+		elif (pos.z > 0 and body.last_team_touch == "blue"):
+			setup_set_piece("goal_kick_red", pos)
+	else: # Lateral
+		setup_set_piece("throw_in", pos)
+
+func setup_set_piece(type, exit_pos):
+	is_resetting = true
+	var spawn_pos = exit_pos
+	spawn_pos.y = 1.2
+	
+	match type:
+		"corner_blue":
+			spawn_pos = $CornerBlueLeft.global_position if exit_pos.x < 0 else $CornerBlueRight.global_position
+		"corner_red":
+			spawn_pos = $CornerRedLeft.global_position if exit_pos.x < 0 else $CornerRedRight.global_position
+		"goal_kick_red":
+			spawn_pos = $GoalKickRed.global_position # Ponto fixo na pequena área
+		"goal_kick_blue":
+			spawn_pos = $GoalKickBlue.global_position # Ponto fixo na pequena área
+		"throw_in":
+			spawn_pos.x = 34.0 if exit_pos.x > 0 else -34.0 # Linha lateral
+	
+	await get_tree().create_timer(1.0).timeout
+	current_ball.prepare_set_piece(spawn_pos)
+	is_resetting = false
+
+func notify_ball_out_internal():
+	is_resetting = true
+	notify_ball_out.rpc()
+	
+	await get_tree().create_timer(1.0).timeout
+	is_resetting = false
 
 @rpc("authority", "call_local", "reliable")
 func notify_ball_out():
