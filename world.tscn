@@ -1,11 +1,14 @@
-[gd_scene load_steps=17 format=3 uid="uid://itn81is0owfp"]
+[gd_scene format=3 uid="uid://itn81is0owfp"]
 
-[ext_resource type="Script" path="res://world.gd" id="1_wbqfw"]
-[ext_resource type="Shader" path="res://Mundo.gdshader" id="2_va67a"]
+[ext_resource type="Script" uid="uid://dtgl8jvdythnx" path="res://world.gd" id="1_wbqfw"]
+[ext_resource type="Shader" uid="uid://jb7lwqacr7vn" path="res://Mundo.gdshader" id="2_va67a"]
 [ext_resource type="Texture2D" uid="uid://dkpuej4foxqy7" path="res://linhas campo.png" id="3_twyt1"]
 [ext_resource type="Texture2D" uid="uid://cxie7op7u61jj" path="res://horn-koppe_spring_1k.exr" id="4_ulwyy"]
 [ext_resource type="PackedScene" uid="uid://c2he2t41wjb76" path="res://Goal.tscn" id="5_q1a7v"]
 [ext_resource type="FontFile" uid="uid://c5js8h10amtav" path="res://ARIALBD.TTF" id="6_guyn2"]
+[ext_resource type="Script" uid="uid://wr5ur5dqrkni" path="res://addons/netfox.extras/physics/godot_driver_3d.gd" id="7_pkg7o"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pkg7o"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xbvsk"]
 render_priority = 0
@@ -44,21 +47,22 @@ background_energy_multiplier = 0.8
 sky = SubResource("Sky_mmtq0")
 ambient_light_energy = 0.0
 
-[node name="World" type="Node3D"]
+[node name="World" type="Node3D" unique_id=1613981613]
 script = ExtResource("1_wbqfw")
 
-[node name="Field" type="StaticBody3D" parent="."]
+[node name="Field" type="StaticBody3D" parent="." unique_id=874515324]
 transform = Transform3D(1.2, 0, 0, 0, 1, 0, 0, 0, 1.2, 0, 0, 0)
 collision_mask = 3
+physics_material_override = SubResource("PhysicsMaterial_pkg7o")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Field"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Field" unique_id=521810297]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00751877, 0.044241, -0.0299339)
 mesh = SubResource("BoxMesh_5mhe3")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Field"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Field" unique_id=1884344477]
 shape = SubResource("BoxShape3D_pfbyl")
 
-[node name="Decal" type="Decal" parent="Field"]
+[node name="Decal" type="Decal" parent="Field" unique_id=1414474593]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 size = Vector3(100, 2, 64)
 texture_albedo = ExtResource("3_twyt1")
@@ -66,49 +70,49 @@ emission_energy = 0.0
 upper_fade = 1.47737
 lower_fade = 0.144891
 
-[node name="OutBounds" type="Area3D" parent="Field"]
+[node name="OutBounds" type="Area3D" parent="Field" unique_id=1660566729]
 transform = Transform3D(1.03, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 collision_mask = 2
 
-[node name="Out1" type="CollisionShape3D" parent="Field/OutBounds"]
+[node name="Out1" type="CollisionShape3D" parent="Field/OutBounds" unique_id=1903563723]
 transform = Transform3D(1.14421, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, -47.8)
 shape = SubResource("BoxShape3D_gyy3w")
 
-[node name="Out2" type="CollisionShape3D" parent="Field/OutBounds"]
+[node name="Out2" type="CollisionShape3D" parent="Field/OutBounds" unique_id=2082099213]
 transform = Transform3D(1.28596, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 47.8)
 shape = SubResource("BoxShape3D_gyy3w")
 
-[node name="Out3" type="CollisionShape3D" parent="Field/OutBounds"]
+[node name="Out3" type="CollisionShape3D" parent="Field/OutBounds" unique_id=274899287]
 transform = Transform3D(-5.2589e-08, 0, 1, 0, 1, 0, -1.2031, 0, -4.37114e-08, 29.2, 20, -0.032)
 shape = SubResource("BoxShape3D_lkyv5")
 
-[node name="Out4" type="CollisionShape3D" parent="Field/OutBounds"]
+[node name="Out4" type="CollisionShape3D" parent="Field/OutBounds" unique_id=1573134009]
 transform = Transform3D(-6.64191e-08, 0, 1, 0, 1, 0, -1.51949, 0, -4.37114e-08, -29.2, 20, 0)
 shape = SubResource("BoxShape3D_lkyv5")
 
-[node name="Field2" type="StaticBody3D" parent="."]
+[node name="Field2" type="StaticBody3D" parent="." unique_id=1458508013]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Field2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Field2" unique_id=358037836]
 transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, -0.692568, 0)
 mesh = SubResource("BoxMesh_gcbvu")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Field2/MeshInstance3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Field2/MeshInstance3D" unique_id=1618056580]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00542259, 0)
 shape = SubResource("BoxShape3D_pfbyl")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2026739769]
 environment = SubResource("Environment_sputn")
 
-[node name="GoalA" parent="." instance=ExtResource("5_q1a7v")]
+[node name="GoalA" parent="." unique_id=433502126 instance=ExtResource("5_q1a7v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -56)
 
-[node name="GoalB" parent="." instance=ExtResource("5_q1a7v")]
+[node name="GoalB" parent="." unique_id=56337370 instance=ExtResource("5_q1a7v")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 56)
 team_name = "Time B"
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=536079815]
 
-[node name="LabelPlacar" type="Label" parent="CanvasLayer"]
+[node name="LabelPlacar" type="Label" parent="CanvasLayer" unique_id=1802792956]
 offset_left = 31.0
 offset_top = 24.0
 offset_right = 257.0
@@ -122,7 +126,7 @@ theme_override_fonts/font = ExtResource("6_guyn2")
 theme_override_font_sizes/font_size = 72
 text = "0 - 0"
 
-[node name="ButtonHost" type="Button" parent="CanvasLayer"]
+[node name="ButtonHost" type="Button" parent="CanvasLayer" unique_id=524562073]
 offset_left = 340.0
 offset_top = 331.0
 offset_right = 570.0
@@ -130,7 +134,7 @@ offset_bottom = 462.0
 theme_override_font_sizes/font_size = 30
 text = "Criar Partida"
 
-[node name="ButtonJoin" type="Button" parent="CanvasLayer"]
+[node name="ButtonJoin" type="Button" parent="CanvasLayer" unique_id=1085357497]
 offset_left = 585.0
 offset_top = 333.0
 offset_right = 821.0
@@ -138,13 +142,13 @@ offset_bottom = 462.0
 theme_override_font_sizes/font_size = 30
 text = "Entrar Partida"
 
-[node name="LobbyName" type="LineEdit" parent="CanvasLayer"]
+[node name="LobbyName" type="LineEdit" parent="CanvasLayer" unique_id=1918178339]
 offset_left = 340.0
 offset_top = 236.0
 offset_right = 814.0
 offset_bottom = 312.0
 
-[node name="ConsoleVisual" type="RichTextLabel" parent="CanvasLayer"]
+[node name="ConsoleVisual" type="RichTextLabel" parent="CanvasLayer" unique_id=1791593819]
 layout_direction = 2
 anchors_preset = 1
 anchor_left = 1.0
@@ -158,18 +162,67 @@ size_flags_horizontal = 8
 bbcode_enabled = true
 scroll_following = true
 
-[node name="SpawnBola" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.31062, 0)
+[node name="SpawnBola" type="Marker3D" parent="." unique_id=860405744]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8950708, 0)
 gizmo_extents = 1.24
 
-[node name="SpawnPenalti" type="Marker3D" parent="."]
+[node name="GoalKickRed" type="Marker3D" parent="." unique_id=632611448]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.707846, 2.31062, 50.495834)
+gizmo_extents = 1.24
+
+[node name="GoalKickBlue" type="Marker3D" parent="." unique_id=660915054]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.412977, 2.31062, -50.531273)
+gizmo_extents = 1.24
+
+[node name="CornerRedRight" type="Marker3D" parent="." unique_id=555838903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.994951, 2.31062, 54.945503)
+gizmo_extents = 1.24
+
+[node name="CornerRedLeft" type="Marker3D" parent="." unique_id=1455468441]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.63939, 2.31062, 54.665894)
+gizmo_extents = 1.24
+
+[node name="CornerBlueRight" type="Marker3D" parent="." unique_id=539140221]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.461334, 2.31062, -53.87534)
+gizmo_extents = 1.24
+
+[node name="CornerBlueLeft" type="Marker3D" parent="." unique_id=217122980]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.992867, 2.31062, -54.324535)
+gizmo_extents = 1.24
+
+[node name="SpawnPenalti" type="Marker3D" parent="." unique_id=144653835]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.745356, -21.83)
 gizmo_extents = 1.24
 
-[node name="SpawnJogador" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.54096, 6.54945)
+[node name="SpawnRed" type="Marker3D" parent="." unique_id=1356696933 groups=["red_spawns"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6075149, 10.663719)
 gizmo_extents = 1.24
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://player_red.tscn", "res://player_blue.tscn", "res://Bola.tscn")
+[node name="SpawnRed2" type="Marker3D" parent="." unique_id=313220245 groups=["red_spawns"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.9235697, 2.6075149, 10.663719)
+gizmo_extents = 1.24
+
+[node name="SpawnRed3" type="Marker3D" parent="." unique_id=1659604408 groups=["red_spawns"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.1628084, 2.6075149, 10.663719)
+gizmo_extents = 1.24
+
+[node name="SpawnBlue" type="Marker3D" parent="." unique_id=50926613 groups=["blue_spawns"]]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 2.7036443, -8.53067)
+gizmo_extents = 1.24
+
+[node name="SpawnBlue2" type="Marker3D" parent="." unique_id=769426838 groups=["blue_spawns"]]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -6.8605957, 2.7036443, -8.53067)
+gizmo_extents = 1.24
+
+[node name="SpawnBlue3" type="Marker3D" parent="." unique_id=498296324 groups=["blue_spawns"]]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.6565, 2.7036443, -8.53067)
+gizmo_extents = 1.24
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1956096689]
+_spawnable_scenes = PackedStringArray("uid://da20cyh3q34vc", "uid://ds5s0hurdsfsl", "uid://exxab3we4ceg")
 spawn_path = NodePath("..")
+
+[node name="PhysicsDriver3D" type="Node" parent="." unique_id=1857673736]
+script = ExtResource("7_pkg7o")
+rollback_physics_space = false
+metadata/_custom_type_script = "uid://wr5ur5dqrkni"

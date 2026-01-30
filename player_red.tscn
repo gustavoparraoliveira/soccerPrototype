@@ -1,9 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://ds5s0hurdsfsl"]
+[gd_scene load_steps=10 format=3 uid="uid://ds5s0hurdsfsl"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_lrf8g"]
+[ext_resource type="Script" uid="uid://cyl8vy8o3bgw1" path="res://player.gd" id="1_lrf8g"]
+[ext_resource type="Script" uid="uid://cfgag7sk7m5gh" path="res://input.gd" id="2_kkys4"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_p6lx1"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_p6lx1"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_myolf"]
-albedo_color = Color(1, 0, 0, 1)
+albedo_color = Color(0.78039217, 0, 0, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_iluei"]
 material = SubResource("StandardMaterial3D_myolf")
@@ -11,25 +14,15 @@ material = SubResource("StandardMaterial3D_myolf")
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a65ta"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_krxkm"]
-size = Vector3(2.3551, 1.44415, 1.31836)
+size = Vector3(2.3551, 1.44415, 1.805176)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_u0j47"]
 height = 1.70971
 radius = 0.70492
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1kiio"]
-properties/0/path = NodePath(".:velocity")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:global_position")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:rotation")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-
-[node name="Player" type="CharacterBody3D" groups=["vermelho"]]
+[node name="Player" type="CharacterBody3D" groups=["red"]]
 script = ExtResource("1_lrf8g")
+team = "red"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_iluei")
@@ -45,7 +38,6 @@ spring_length = 4.8
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0762882, 0.12344, 5.96464)
-current = true
 
 [node name="AreaKick" type="Area3D" parent="CameraPivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0116005, 0.0128472, -1.50681)
@@ -53,23 +45,15 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CameraPivot/AreaKick"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000851301, -0.19216, 0.835271)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0008513015, -0.19216, 0.5918629)
 shape = SubResource("BoxShape3D_krxkm")
 
-[node name="AreaKick2" type="Area3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0116005, 0.0128472, -1.50681)
+[node name="AreaDribble" type="Area3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00484848, 0.0122168, -1.5087)
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraPivot/AreaKick2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000851301, -0.19216, 0.835271)
-shape = SubResource("BoxShape3D_krxkm")
-
-[node name="AreaDribble" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00484848, 0.0122168, -1.5087)
-collision_mask = 2
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaDribble"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraPivot/AreaDribble"]
 transform = Transform3D(1.72681, 0, 0, 0, 0.560255, 0, 0, 0, 1.19238, -0.00219905, -0.443847, 1.1596)
 shape = SubResource("CylinderShape3D_u0j47")
 
@@ -82,5 +66,19 @@ offset_right = 733.0
 offset_bottom = 617.0
 show_percentage = false
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_1kiio")
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("2_kkys4")
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("3_p6lx1")
+root = NodePath("..")
+enable_prediction = true
+state_properties = Array[String]([":global_position", ":velocity", ":is_charging", ":was_charging"])
+input_properties = Array[String](["PlayerInput:movement_vector", "PlayerInput:jumping", "PlayerInput:sprinting", "PlayerInput:charging", "PlayerInput:action_type", "PlayerInput:aim_direction", "PlayerInput:look_yaw", "PlayerInput:look_pitch", "PlayerInput:jumping", "PlayerInput:firing"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("4_p6lx1")
+root = NodePath("..")
+properties = Array[String]([":global_position", ":quaternion"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
