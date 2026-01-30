@@ -43,7 +43,7 @@ func request_reset():
 	reset_to_spawn()
 
 func reset_to_spawn():
-	var spawn_node = get_parent().get_node("SpawnBola")
+	var spawn_node = get_parent().get_node("BallSpawns/SpawnBola")
 	if not spawn_node: return
 	
 	freeze = true

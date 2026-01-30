@@ -5,7 +5,7 @@ extends Node3D
 @export var ball_scene: PackedScene = preload("res://Bola.tscn")
 
 @onready var score_label = $CanvasLayer/LabelPlacar
-@onready var ball_spawn = $SpawnBola
+@onready var ball_spawn = $BallSpawns/SpawnBola
 @onready var visual_console = $CanvasLayer/ConsoleVisual
 @onready var lobby_name_input = $CanvasLayer/LobbyName
 
@@ -81,11 +81,11 @@ func spawn_player(id):
 	if player_count % 2 == 0:
 		player.team = "red" 
 		player.add_to_group("red")
-		player.global_position = $SpawnRed.global_position
+		player.global_position = $PlayerSpawns/RedSpawns/SpawnRed.global_position
 	else: 
 		player.team = "blue" 
 		player.add_to_group("blue")
-		player.global_position = $SpawnBlue.global_position
+		player.global_position = $PlayerSpawns/BlueSpawns/SpawnBlue.global_position
 
 func spawn_ball():
 	if not is_instance_valid(current_ball):
@@ -106,10 +106,23 @@ func _on_goal_scored(team):
 	
 	update_score_ui.rpc(score_a, score_b)
 	
-	await get_tree().create_timer(1.5).timeout
 	if is_instance_valid(current_ball):
+		await get_tree().create_timer(1.5).timeout
 		current_ball.reset_to_spawn()
+	
+	reset_player_positions("red", "red_spawns")
+	reset_player_positions("blue", "blue_spawns")
+	
 	is_resetting = false
+
+func reset_player_positions(playerGroup: String, spawnGroup: String):
+	await get_tree().create_timer(0.5).timeout
+	
+	var players = get_tree().get_nodes_in_group(playerGroup)
+	var spawns = get_tree().get_nodes_in_group(spawnGroup)
+	for i in range(players.size()): 
+		players[i].resetting = true
+		players[i].reset_position(spawns[i].global_position)
 
 func reset_after_goal():
 	await get_tree().create_timer(1.5).timeout
@@ -134,14 +147,34 @@ func _on_ball_out(body):
 	if abs(pos.z) > 55.0: # Linha de fundo
 		if (pos.z > 0 and body.last_team_touch == "red"):
 			setup_set_piece("corner_red", pos)
+			reset_player_positions("red", "corner_red_red_spawns")
+			reset_player_positions("blue", "corner_red_blue_spawns")
 		elif (pos.z < 0 and body.last_team_touch == "blue"):
 			setup_set_piece("corner_blue", pos)
+			reset_player_positions("blue", "corner_blue_blue_spawns")
+			reset_player_positions("red", "corner_blue_red_spawns")
 		elif (pos.z < 0 and body.last_team_touch == "red"):
 			setup_set_piece("goal_kick_blue", pos)
+			reset_player_positions("blue", "goalkick_blue_blue_spawns")
+			reset_player_positions("red", "goalkick_blue_red_spawns")
 		elif (pos.z > 0 and body.last_team_touch == "blue"):
 			setup_set_piece("goal_kick_red", pos)
+			reset_player_positions("blue", "goalkick_red_blue_spawns")
+			reset_player_positions("red", "goalkick_red_red_spawns")
 	else: # Lateral
 		setup_set_piece("throw_in", pos)
+		if current_ball.last_team_touch == "blue":
+			var reds = get_tree().get_nodes_in_group("red")
+			reds.sort_custom(compare_distances_to_ball)
+			reds[0].resetting = true
+			reds[0].reset_position($PlayerSpawns/side_out.global_position)
+			reds[0].resetting = false
+		else:
+			var blues = get_tree().get_nodes_in_group("blue")
+			blues.sort_custom(compare_distances_to_ball)
+			blues[0].resetting = true
+			blues[0].reset_position($PlayerSpawns/side_out.global_position)
+			blues[0].resetting = false
 
 func setup_set_piece(type, exit_pos):
 	is_resetting = true
@@ -150,20 +183,42 @@ func setup_set_piece(type, exit_pos):
 	
 	match type:
 		"corner_blue":
-			spawn_pos = $CornerBlueLeft.global_position if exit_pos.x < 0 else $CornerBlueRight.global_position
+			if exit_pos.x < 0:
+				spawn_pos = $BallSpawns/CornerBlueLeft.global_position
+				$"PlayerSpawns/CornerBlue-RedSpawns/1".global_position.x = -36
+			else:
+				spawn_pos = $BallSpawns/CornerBlueRight.global_position
+				$"PlayerSpawns/CornerBlue-RedSpawns/1".global_position.x = 36
 		"corner_red":
-			spawn_pos = $CornerRedLeft.global_position if exit_pos.x < 0 else $CornerRedRight.global_position
+			if exit_pos.x < 0:
+				spawn_pos = $BallSpawns/CornerRedLeft.global_position
+				$"PlayerSpawns/CornerRed-BlueSpawns/1".global_position.x = -36
+			else:
+				spawn_pos = $BallSpawns/CornerRedRight.global_position
+				$"PlayerSpawns/CornerRed-BlueSpawns/1".global_position.x = 36
 		"goal_kick_red":
-			spawn_pos = $GoalKickRed.global_position # Ponto fixo na pequena área
+			spawn_pos = $BallSpawns/GoalKickRed.global_position 
+			
 		"goal_kick_blue":
-			spawn_pos = $GoalKickBlue.global_position # Ponto fixo na pequena área
+			spawn_pos = $BallSpawns/GoalKickBlue.global_position # Ponto fixo na pequena área
 		"throw_in":
 			spawn_pos.x = 34.0 if exit_pos.x > 0 else -34.0 # Linha lateral
+			$PlayerSpawns/side_out.global_position = spawn_pos
+			if exit_pos.x > 0:
+				$PlayerSpawns/side_out.global_position.x = $PlayerSpawns/side_out.global_position.x + 2 
+			else:
+				$PlayerSpawns/side_out.global_position.x = $PlayerSpawns/side_out.global_position.x - 2 
 	
 	await get_tree().create_timer(1.0).timeout
 	current_ball.prepare_set_piece(spawn_pos)
 	is_resetting = false
 
+func compare_distances_to_ball(a, b) -> bool:
+	var dist_a_squared = a.global_position.distance_squared_to(current_ball.global_position)
+	var dist_b_squared = b.global_position.distance_squared_to(current_ball.global_position)
+	
+	return dist_a_squared < dist_b_squared
+	
 func notify_ball_out_internal():
 	is_resetting = true
 	notify_ball_out.rpc()

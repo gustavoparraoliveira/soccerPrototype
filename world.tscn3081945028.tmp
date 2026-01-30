@@ -249,141 +249,65 @@ gizmo_extents = 1.24
 
 [node name="1" type="Marker3D" parent="PlayerSpawns/CornerRed-RedSpawns" unique_id=2087183291 groups=["corner_red_red_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.0948124, 1.782258, 52.376595)
-visible = false
 gizmo_extents = 1.99
 
 [node name="2" type="Marker3D" parent="PlayerSpawns/CornerRed-RedSpawns" unique_id=1345037545 groups=["corner_red_red_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3236504, 1.782258, 52.376595)
-visible = false
 gizmo_extents = 1.99
 
 [node name="3" type="Marker3D" parent="PlayerSpawns/CornerRed-RedSpawns" unique_id=221055939 groups=["corner_red_red_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2301683, 1.782258, 46.884026)
-visible = false
 gizmo_extents = 1.99
 
 [node name="CornerRed-BlueSpawns" type="Node" parent="PlayerSpawns" unique_id=1816126879]
 
 [node name="1" type="Marker3D" parent="PlayerSpawns/CornerRed-BlueSpawns" unique_id=809177158 groups=["corner_red_blue_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.101105, 1.782258, 58.545235)
-visible = false
 gizmo_extents = 1.99
 
 [node name="2" type="Marker3D" parent="PlayerSpawns/CornerRed-BlueSpawns" unique_id=39265102 groups=["corner_red_blue_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.46179, 1.782258, 48.88441)
-visible = false
 gizmo_extents = 1.99
 
 [node name="3" type="Marker3D" parent="PlayerSpawns/CornerRed-BlueSpawns" unique_id=520146147 groups=["corner_red_blue_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.994034, 1.782258, 49.772217)
-visible = false
 gizmo_extents = 1.99
 
 [node name="CornerBlue-RedSpawns" type="Node" parent="PlayerSpawns" unique_id=378676924]
 
 [node name="1" type="Marker3D" parent="PlayerSpawns/CornerBlue-RedSpawns" unique_id=1080093251 groups=["corner_blue_red_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.101105, 1.782258, -58.43429)
-visible = false
 gizmo_extents = 1.99
 
 [node name="2" type="Marker3D" parent="PlayerSpawns/CornerBlue-RedSpawns" unique_id=105655099 groups=["corner_blue_red_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.46179, 1.782258, -49.494823)
-visible = false
 gizmo_extents = 1.99
 
 [node name="3" type="Marker3D" parent="PlayerSpawns/CornerBlue-RedSpawns" unique_id=160113575 groups=["corner_blue_red_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.994034, 1.782258, -48.607018)
-visible = false
 gizmo_extents = 1.99
 
 [node name="CornerBlue-BlueSpawns" type="Node" parent="PlayerSpawns" unique_id=1735122119]
 
 [node name="1" type="Marker3D" parent="PlayerSpawns/CornerBlue-BlueSpawns" unique_id=1185451177 groups=["corner_blue_blue_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.0948124, 1.782258, -51.829723)
-visible = false
 gizmo_extents = 1.99
 
 [node name="2" type="Marker3D" parent="PlayerSpawns/CornerBlue-BlueSpawns" unique_id=2011070725 groups=["corner_blue_blue_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3236504, 1.782258, -51.829723)
-visible = false
 gizmo_extents = 1.99
 
 [node name="3" type="Marker3D" parent="PlayerSpawns/CornerBlue-BlueSpawns" unique_id=1917330876 groups=["corner_blue_blue_spawns"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2301683, 1.782258, -44.359596)
-visible = false
 gizmo_extents = 1.99
 
 [node name="GoalKickRed-RedSpawns" type="Node" parent="PlayerSpawns" unique_id=1329802413]
 
-[node name="1" type="Marker3D" parent="PlayerSpawns/GoalKickRed-RedSpawns" unique_id=2002059820 groups=["goalkick_red_red_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0551672, 1.782258, 55.523792)
-visible = false
-gizmo_extents = 1.99
-
-[node name="2" type="Marker3D" parent="PlayerSpawns/GoalKickRed-RedSpawns" unique_id=818886548 groups=["goalkick_red_red_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.498169, 1.782258, -10.95338)
-visible = false
-gizmo_extents = 1.99
-
-[node name="3" type="Marker3D" parent="PlayerSpawns/GoalKickRed-RedSpawns" unique_id=1559153487 groups=["goalkick_red_red_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.402421, 1.782258, -10.990196)
-visible = false
-gizmo_extents = 1.99
-
 [node name="GoalKickRed-BlueSpawns" type="Node" parent="PlayerSpawns" unique_id=2025682673]
-
-[node name="1" type="Marker3D" parent="PlayerSpawns/GoalKickRed-BlueSpawns" unique_id=572503519 groups=["goalkick_red_blue_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0551672, 1.782258, -28.108028)
-visible = false
-gizmo_extents = 1.99
-
-[node name="2" type="Marker3D" parent="PlayerSpawns/GoalKickRed-BlueSpawns" unique_id=1490488296 groups=["goalkick_red_blue_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.9881706, 1.782258, -15.005381)
-visible = false
-gizmo_extents = 1.99
-
-[node name="3" type="Marker3D" parent="PlayerSpawns/GoalKickRed-BlueSpawns" unique_id=939130745 groups=["goalkick_red_blue_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.015229, 1.782258, -15.072032)
-visible = false
-gizmo_extents = 1.99
 
 [node name="GoalKickBlue-RedSpawns" type="Node" parent="PlayerSpawns" unique_id=928283860]
 
-[node name="1" type="Marker3D" parent="PlayerSpawns/GoalKickBlue-RedSpawns" unique_id=1979121090 groups=["goalkick_blue_red_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.055, 1.782, 28.108)
-visible = false
-gizmo_extents = 1.99
-
-[node name="2" type="Marker3D" parent="PlayerSpawns/GoalKickBlue-RedSpawns" unique_id=1069931947 groups=["goalkick_blue_red_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.988, 1.782, 15.005)
-visible = false
-gizmo_extents = 1.99
-
-[node name="3" type="Marker3D" parent="PlayerSpawns/GoalKickBlue-RedSpawns" unique_id=1538366843 groups=["goalkick_blue_red_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.015, 1.782, 15.072)
-visible = false
-gizmo_extents = 1.99
-
 [node name="GoalKickBlue-BlueSpawns" type="Node" parent="PlayerSpawns" unique_id=781308098]
-
-[node name="1" type="Marker3D" parent="PlayerSpawns/GoalKickBlue-BlueSpawns" unique_id=1509812115 groups=["goalkick_blue_blue_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.055, 1.782, -55.524)
-visible = false
-gizmo_extents = 1.99
-
-[node name="2" type="Marker3D" parent="PlayerSpawns/GoalKickBlue-BlueSpawns" unique_id=466984090 groups=["goalkick_blue_blue_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.498, 1.782, 10.953)
-visible = false
-gizmo_extents = 1.99
-
-[node name="3" type="Marker3D" parent="PlayerSpawns/GoalKickBlue-BlueSpawns" unique_id=121146034 groups=["goalkick_blue_blue_spawns"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.402, 1.782, 10.99)
-visible = false
-gizmo_extents = 1.99
-
-[node name="side_out" type="Marker3D" parent="PlayerSpawns" unique_id=742021696]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.055, 5.060929, 0.25577927)
-gizmo_extents = 1.99
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1956096689]
 _spawnable_scenes = PackedStringArray("uid://da20cyh3q34vc", "uid://ds5s0hurdsfsl", "uid://exxab3we4ceg")

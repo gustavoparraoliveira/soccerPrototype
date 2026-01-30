@@ -11,7 +11,7 @@ extends CharacterBody3D
 @export var acceleration = 30.0
 @export var friction = 20.0
 @export var jump_force = 4.5
-
+@export var reset_pos: Vector3
 @onready var input_node = $PlayerInput
 @onready var camera_pivot = $CameraPivot
 @onready var kick_area = $CameraPivot/AreaKick
@@ -27,6 +27,7 @@ var is_waiting_to_shoot = false
 var current_action = ""
 var dribble_cooldown = 0.0
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+var resetting = false
 
 func _ready():
 	await get_tree().process_frame
@@ -54,6 +55,9 @@ func _rollback_tick(delta, _tick, _is_fresh):
 	
 	if multiplayer.is_server():
 		server_process_dribble(delta)
+	
+	if resetting:
+		reset_position(reset_pos)
 
 func _force_update_is_on_floor():
 	var old_velocity = velocity
@@ -159,3 +163,18 @@ func server_process_dribble(delta):
 					body.apply_impulse_synced(look_dir.normalized() * f)
 				dribble_cooldown = 0.1
 				break
+
+func reset_position(pos):	
+	if not resetting: return
+	
+	reset_pos = pos
+	
+	if global_position != pos:
+		global_position = pos
+		velocity = Vector3.ZERO
+		quaternion = Quaternion.IDENTITY
+		
+		if has_node("RollbackSynchronizer"):
+			$RollbackSynchronizer.process_settings()
+	else: 
+		resetting = false
